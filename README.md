@@ -27,51 +27,26 @@ Compared with a general-purpose conversational AI, LifePilot emphasizes:
 
 Generate better daily plans from tasks, habits, and personal rhythm.
 
-Examples:
-
-- Prioritize high-value work in the morning
-- Reserve evenings for exercise or light routines
-- Gently surface delayed items before they pile up
-
 ### 2. Smart Expense Tracking
 
 Track daily spending and generate practical saving suggestions.
-
-Examples:
-
-- Spot delivery spending that is trending too high
-- Detect categories with repeated growth
-- Offer realistic opportunities to reduce small daily costs
 
 ### 3. Mood Analysis and Guidance
 
 Analyze user messages with lightweight mood detection and return gentle, non-medical guidance.
 
-Examples:
-
-- Recommend reducing low-priority tasks when stress is elevated
-- Suggest rest, movement, or reaching out when energy is low
-
 ### 4. Local Lifestyle Recommendations
 
 Future versions will combine location, time, budget, and preferences to recommend what to eat, where to go, and what to do nearby.
 
-Examples:
-
-- What to eat
-- Where to unwind
-- How to spend a weekend well
-
 ## Current Implementation
 
-The repository now includes a locally runnable MVP API with:
+The repository now includes:
 
-- User profile management
-- Task creation and task planning
-- Expense logging and spending insights
-- Mood analysis and response suggestions
-- A dashboard-style aggregation endpoint
+- A Node.js + TypeScript API
 - SQLite-based local persistence
+- A browser UI served directly by Express
+- Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
 ## Quick Start
 
@@ -86,11 +61,7 @@ Default address:
 http://localhost:3000
 ```
 
-Health check:
-
-```bash
-GET /health
-```
+Open the web app in your browser and use the bundled demo user experience.
 
 ## Current API
 
@@ -119,7 +90,7 @@ GET /api/dashboard/demo-user
 
 ## Next Steps
 
-- Add a proper frontend client
+- Add a richer frontend flow for onboarding and profile editing
 - Upgrade the suggestion engine from rules to model-backed generation
 - Expand the recommendation layer for local lifestyle use cases
 - Introduce richer user feedback and personalization loops

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LifePilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">LifePilot</p>
+          <h1>Your AI co-pilot for daily decisions.</h1>
+          <p class="hero-copy">
+            Plan what matters today, track spending with context, and get gentle emotional guidance from one local-first assistant.
+          </p>
+        </div>
+        <div class="hero-card">
+          <span class="hero-label">Active User</span>
+          <strong id="hero-user">demo-user</strong>
+          <p id="hero-focus">Loading today's focus...</p>
+        </div>
+      </header>
+
+      <main class="dashboard-grid">
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Today</p>
+              <h2>Dashboard Snapshot</h2>
+            </div>
+            <button id="refresh-dashboard" class="ghost-button">Refresh</button>
+          </div>
+          <div class="snapshot-grid">
+            <article class="snapshot-card accent-warm">
+              <span>Total Spent</span>
+              <strong id="total-spent">-</strong>
+              <p id="budget-usage">-</p>
+            </article>
+            <article class="snapshot-card accent-cool">
+              <span>Top Task</span>
+              <strong id="top-task">-</strong>
+              <p id="top-task-reason">-</p>
+            </article>
+            <article class="snapshot-card accent-soft">
+              <span>Mood</span>
+              <strong id="latest-mood">-</strong>
+              <p id="latest-mood-advice">-</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Task Planner</p>
+              <h2>Add a Task</h2>
+            </div>
+          </div>
+          <form id="task-form" class="stack-form">
+            <label>
+              <span>Task title</span>
+              <input name="title" type="text" placeholder="Finish landing page" required />
+            </label>
+            <div class="two-col">
+              <label>
+                <span>Priority</span>
+                <select name="priority">
+                  <option value="high">High</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </label>
+              <label>
+                <span>Minutes</span>
+                <input name="estimatedMinutes" type="number" min="5" step="5" value="30" required />
+              </label>
+            </div>
+            <button type="submit" class="primary-button">Save task</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Expense Tracker</p>
+              <h2>Log Spending</h2>
+            </div>
+          </div>
+          <form id="expense-form" class="stack-form">
+            <div class="two-col">
+              <label>
+                <span>Amount</span>
+                <input name="amount" type="number" min="0" step="0.01" placeholder="38" required />
+              </label>
+              <label>
+                <span>Category</span>
+                <select name="category">
+                  <option value="外卖">Delivery</option>
+                  <option value="咖啡">Coffee</option>
+                  <option value="出行">Transport</option>
+                  <option value="购物">Shopping</option>
+                  <option value="其他">Other</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <span>Note</span>
+              <input name="note" type="text" placeholder="Lunch / taxi / snacks" />
+            </label>
+            <button type="submit" class="primary-button">Save expense</button>
+          </form>
+        </section>
+
+        <section class="panel panel-tall">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Emotional Check-in</p>
+              <h2>How are you feeling?</h2>
+            </div>
+          </div>
+          <form id="mood-form" class="stack-form">
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="5" placeholder="I feel a bit overwhelmed and behind on everything..." required></textarea>
+            </label>
+            <button type="submit" class="primary-button">Analyze mood</button>
+          </form>
+          <div id="mood-result" class="insight-card hidden"></div>
+        </section>
+
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Planned Today</p>
+              <h2>Recommended Tasks</h2>
+            </div>
+          </div>
+          <div id="task-plan" class="list-grid"></div>
+        </section>
+
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Spending Insights</p>
+              <h2>Savings Suggestions</h2>
+            </div>
+          </div>
+          <div id="expense-summary" class="list-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="item-template">
+      <article class="list-card">
+        <div class="list-card-title"></div>
+        <div class="list-card-meta"></div>
+        <p class="list-card-copy"></p>
+      </article>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

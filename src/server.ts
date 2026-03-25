@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "node:path";
 import { initializeDatabase, repository } from "./data/db";
 import { Expense, Task, UserProfile } from "./models";
 import { buildDashboard } from "./services/dashboard-service";
@@ -9,10 +10,13 @@ import { buildTaskPlan } from "./services/planner-service";
 import { createId } from "./utils/id";
 
 const app = express();
+const publicDir = path.resolve(process.cwd(), "public");
+
 initializeDatabase();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(publicDir));
 
 app.get("/health", (_request, response) => {
   response.json({ ok: true, service: "LifePilot API" });
@@ -127,6 +131,10 @@ app.get("/api/dashboard/:userId", (request, response) => {
   }
 
   response.json(dashboard);
+});
+
+app.get("*", (_request, response) => {
+  response.sendFile(path.join(publicDir, "index.html"));
 });
 
 const port = Number(process.env.PORT ?? 3000);
