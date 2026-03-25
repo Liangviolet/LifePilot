@@ -46,3 +46,6 @@ temp/
 
 # Internal docs
 docs/
+
+# Local database
+/data/

@@ -1,107 +1,98 @@
 # LifePilot
 
-LifePilot（生活副驾驶）是一个面向个人生活场景的 AI 助手应用，目标不是只做聊天，而是帮助用户更快做出日常决策。
+LifePilot is an AI assistant for everyday personal life scenarios. Its goal is not just to chat, but to help users make better day-to-day decisions with less friction.
 
-它聚焦以下几个高频问题：
+For Simplified Chinese documentation, see [README.zh-CN.md](./README.zh-CN.md).
 
-- 今天该先做什么
-- 最近钱花得是否合理
-- 当前情绪状态如何调整
-- 生活安排是否更轻松、更有条理
+It focuses on a few high-frequency questions:
 
-## 核心定位
+- What should I do first today?
+- Is my recent spending reasonable?
+- How should I respond to my current mood?
+- How can I make daily life feel more organized and lighter?
 
-LifePilot 希望成为一个更贴近真实生活的 AI 助手。
+## Product Direction
 
-相比通用对话型 AI，LifePilot 更强调：
+LifePilot is designed to be closer to real life than a generic chat assistant.
 
-- 结合个人习惯与日常输入提供建议
-- 输出可执行的下一步行动，而不只是泛化回答
-- 逐步形成用户自己的生活辅助系统
+Compared with a general-purpose conversational AI, LifePilot emphasizes:
 
-## 计划功能
+- Suggestions shaped by personal habits and daily inputs
+- Action-oriented next steps instead of broad answers
+- A growing personal assistance layer that becomes more useful over time
 
-### 1. 每日任务规划
+## Core Features
 
-根据用户输入的待办事项、习惯和节奏信息，生成更适合当天的任务建议。
+### 1. Daily Task Planning
 
-示例：
+Generate better daily plans from tasks, habits, and personal rhythm.
 
-- 上午处理高优先级事项
-- 晚上安排运动或个人整理
-- 对拖延项做轻提醒
+Examples:
 
-### 2. 智能记账与消费建议
+- Prioritize high-value work in the morning
+- Reserve evenings for exercise or light routines
+- Gently surface delayed items before they pile up
 
-帮助用户记录日常支出，并提供更直观的消费分析与节省建议。
+### 2. Smart Expense Tracking
 
-示例：
+Track daily spending and generate practical saving suggestions.
 
-- 本周外卖支出偏高
-- 某类消费连续增长
-- 可以优化的日常开销项
+Examples:
 
-### 3. 情绪分析与建议
+- Spot delivery spending that is trending too high
+- Detect categories with repeated growth
+- Offer realistic opportunities to reduce small daily costs
 
-基于用户聊天内容进行轻量情绪识别，并提供温和、非医疗化的建议。
+### 3. Mood Analysis and Guidance
 
-示例：
+Analyze user messages with lightweight mood detection and return gentle, non-medical guidance.
 
-- 压力偏高，建议减少低优先级任务
-- 情绪低落，建议休息、运动或与朋友联系
+Examples:
 
-### 4. 本地生活推荐
+- Recommend reducing low-priority tasks when stress is elevated
+- Suggest rest, movement, or reaching out when energy is low
 
-后续版本将结合位置、时间、预算与偏好，提供更贴近生活场景的推荐。
+### 4. Local Lifestyle Recommendations
 
-示例：
+Future versions will combine location, time, budget, and preferences to recommend what to eat, where to go, and what to do nearby.
 
-- 吃什么
-- 去哪放松
-- 周末安排什么活动
+Examples:
 
-## 产品特色
+- What to eat
+- Where to unwind
+- How to spend a weekend well
 
-- 不只是对话，而是帮助做决定
-- 聚焦个人生活，而不是泛化问答
-- 更适合高频、轻量、日常使用
+## Current Implementation
 
-## 适用人群
+The repository now includes a locally runnable MVP API with:
 
-- 想提升生活效率的上班族
-- 希望控制预算的学生和独居青年
-- 想要一个更懂自己日常状态的 AI 助手的用户
+- User profile management
+- Task creation and task planning
+- Expense logging and spending insights
+- Mood analysis and response suggestions
+- A dashboard-style aggregation endpoint
+- SQLite-based local persistence
 
-## 当前进度
-
-当前仓库已开始进入 MVP 实现阶段，首批落地的是一个本地可运行的 API 骨架，用于串联以下能力：
-
-- 用户档案
-- 任务录入与今日规划
-- 记账录入与消费建议
-- 情绪分析与建议
-- 首页聚合视图
-
-## 本地运行
+## Quick Start
 
 ```bash
 npm install
 npm run dev
 ```
 
-默认启动地址：
+Default address:
 
 ```bash
 http://localhost:3000
 ```
 
-健康检查：
+Health check:
 
 ```bash
 GET /health
 ```
 
-## 当前 API
+## Current API
 
 ```bash
 GET    /api/users/:userId
@@ -114,21 +105,21 @@ POST   /api/moods/analyze
 GET    /api/dashboard/:userId
 ```
 
-内置了一个演示用户：
+Bundled demo user:
 
 ```bash
 demo-user
 ```
 
-你可以直接访问：
+You can call:
 
 ```bash
 GET /api/dashboard/demo-user
 ```
 
-## 后续方向
+## Next Steps
 
-- 接入正式数据库
-- 将建议引擎从规则逻辑升级为模型驱动
-- 增加 Flutter 或 Web 客户端
-- 逐步实现本地推荐能力
+- Add a proper frontend client
+- Upgrade the suggestion engine from rules to model-backed generation
+- Expand the recommendation layer for local lifestyle use cases
+- Introduce richer user feedback and personalization loops

@@ -1,17 +1,17 @@
-import { expenses, moods, tasks, users } from "../data/store";
 import { DashboardSnapshot } from "../models";
+import { repository } from "../data/db";
 import { summarizeExpenses } from "./finance-service";
 import { buildTaskPlan } from "./planner-service";
 
 export function buildDashboard(userId: string): DashboardSnapshot | null {
-  const user = users.get(userId);
+  const user = repository.getUserById(userId);
   if (!user) {
     return null;
   }
 
-  const userTasks = tasks.filter((task) => task.userId === userId);
-  const userExpenses = expenses.filter((expense) => expense.userId === userId);
-  const userMood = moods.filter((mood) => mood.userId === userId).at(-1);
+  const userTasks = repository.getTasksByUserId(userId);
+  const userExpenses = repository.getExpensesByUserId(userId);
+  const userMood = repository.getLatestMoodByUserId(userId) ?? undefined;
 
   const plannedTasks = buildTaskPlan(user, userTasks);
   const expenseSummary = summarizeExpenses(user, userExpenses);

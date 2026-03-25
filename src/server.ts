@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import { expenses, moods, tasks, users } from "./data/store";
+import { initializeDatabase, repository } from "./data/db";
 import { Expense, Task, UserProfile } from "./models";
 import { buildDashboard } from "./services/dashboard-service";
 import { summarizeExpenses } from "./services/finance-service";
@@ -9,6 +9,7 @@ import { buildTaskPlan } from "./services/planner-service";
 import { createId } from "./utils/id";
 
 const app = express();
+initializeDatabase();
 
 app.use(cors());
 app.use(express.json());
@@ -18,7 +19,7 @@ app.get("/health", (_request, response) => {
 });
 
 app.get("/api/users/:userId", (request, response) => {
-  const user = users.get(request.params.userId);
+  const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
     return;
@@ -40,14 +41,13 @@ app.post("/api/users", (request, response) => {
     habits: payload.habits ?? []
   };
 
-  users.set(user.id, user);
-  response.status(201).json(user);
+  response.status(201).json(repository.createUser(user));
 });
 
 app.post("/api/tasks", (request, response) => {
   const payload = request.body as Partial<Task>;
 
-  if (!payload.userId || !users.has(payload.userId) || !payload.title) {
+  if (!payload.userId || !repository.getUserById(payload.userId) || !payload.title) {
     response.status(400).json({ message: "userId and title are required" });
     return;
   }
@@ -62,25 +62,24 @@ app.post("/api/tasks", (request, response) => {
     status: payload.status ?? "todo"
   };
 
-  tasks.push(task);
-  response.status(201).json(task);
+  response.status(201).json(repository.createTask(task));
 });
 
 app.get("/api/tasks/:userId/plan", (request, response) => {
-  const user = users.get(request.params.userId);
+  const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
     return;
   }
 
-  const userTasks = tasks.filter((task) => task.userId === user.id);
+  const userTasks = repository.getTasksByUserId(user.id);
   response.json(buildTaskPlan(user, userTasks));
 });
 
 app.post("/api/expenses", (request, response) => {
   const payload = request.body as Partial<Expense>;
 
-  if (!payload.userId || !users.has(payload.userId) || payload.amount === undefined || !payload.category) {
+  if (!payload.userId || !repository.getUserById(payload.userId) || payload.amount === undefined || !payload.category) {
     response.status(400).json({ message: "userId, amount and category are required" });
     return;
   }
@@ -94,32 +93,30 @@ app.post("/api/expenses", (request, response) => {
     createdAt: payload.createdAt ?? new Date().toISOString()
   };
 
-  expenses.push(expense);
-  response.status(201).json(expense);
+  response.status(201).json(repository.createExpense(expense));
 });
 
 app.get("/api/expenses/:userId/summary", (request, response) => {
-  const user = users.get(request.params.userId);
+  const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
     return;
   }
 
-  const userExpenses = expenses.filter((expense) => expense.userId === user.id);
+  const userExpenses = repository.getExpensesByUserId(user.id);
   response.json(summarizeExpenses(user, userExpenses));
 });
 
 app.post("/api/moods/analyze", (request, response) => {
   const payload = request.body as { userId?: string; message?: string };
 
-  if (!payload.userId || !users.has(payload.userId) || !payload.message) {
+  if (!payload.userId || !repository.getUserById(payload.userId) || !payload.message) {
     response.status(400).json({ message: "userId and message are required" });
     return;
   }
 
   const moodLog = toMoodLog(payload.userId, payload.message);
-  moods.push(moodLog);
-  response.status(201).json(moodLog);
+  response.status(201).json(repository.createMoodLog(moodLog));
 });
 
 app.get("/api/dashboard/:userId", (request, response) => {
