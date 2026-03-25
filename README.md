@@ -72,17 +72,63 @@ LifePilot 希望成为一个更贴近真实生活的 AI 助手。
 - 希望控制预算的学生和独居青年
 - 想要一个更懂自己日常状态的 AI 助手的用户
 
-## 当前状态
+## 当前进度
 
-项目目前处于早期规划阶段，仓库将优先整理产品介绍、使用方向和后续开发内容。
+当前仓库已开始进入 MVP 实现阶段，首批落地的是一个本地可运行的 API 骨架，用于串联以下能力：
+
+- 用户档案
+- 任务录入与今日规划
+- 记账录入与消费建议
+- 情绪分析与建议
+- 首页聚合视图
+
+## 本地运行
+
+```bash
+npm install
+npm run dev
+```
+
+默认启动地址：
+
+```bash
+http://localhost:3000
+```
+
+健康检查：
+
+```bash
+GET /health
+```
+
+## 当前 API
+
+```bash
+GET    /api/users/:userId
+POST   /api/users
+POST   /api/tasks
+GET    /api/tasks/:userId/plan
+POST   /api/expenses
+GET    /api/expenses/:userId/summary
+POST   /api/moods/analyze
+GET    /api/dashboard/:userId
+```
+
+内置了一个演示用户：
+
+```bash
+demo-user
+```
+
+你可以直接访问：
+
+```bash
+GET /api/dashboard/demo-user
+```
 
 ## 后续方向
 
-- 完成产品原型设计
-- 明确客户端与服务端架构
-- 建立 MVP 版本
-- 接入更稳定的 AI 建议能力
-
-## 仓库说明
-
-当前公开内容以产品介绍为主，不包含内部方案设计文档。
+- 接入正式数据库
+- 将建议引擎从规则逻辑升级为模型驱动
+- 增加 Flutter 或 Web 客户端
+- 逐步实现本地推荐能力
