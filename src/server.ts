@@ -5,6 +5,7 @@ import { initializeDatabase, repository } from "./data/db";
 import { Expense, Task, UserProfile } from "./models";
 import { buildDashboard } from "./services/dashboard-service";
 import { createMoodLog, generateExpenseSummary, generateTaskPlan, getAiStatus } from "./services/ai/service";
+import { buildLocalRecommendations } from "./services/recommendation-service";
 import { createId } from "./utils/id";
 
 const app = express();
@@ -145,6 +146,17 @@ app.post("/api/moods/analyze", async (request, response) => {
 
   const moodLog = await createMoodLog(payload.userId, payload.message);
   response.status(201).json(repository.createMoodLog(moodLog));
+});
+
+app.get("/api/recommendations/:userId", (request, response) => {
+  const user = repository.getUserById(request.params.userId);
+  if (!user) {
+    response.status(404).json({ message: "User not found" });
+    return;
+  }
+
+  const latestMood = repository.getLatestMoodByUserId(user.id) ?? undefined;
+  response.json(buildLocalRecommendations(user, latestMood));
 });
 
 app.get("/api/dashboard/:userId", async (request, response) => {

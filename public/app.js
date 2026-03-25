@@ -18,6 +18,7 @@ const els = {
   latestMoodAdvice: document.querySelector("#latest-mood-advice"),
   taskPlan: document.querySelector("#task-plan"),
   expenseSummary: document.querySelector("#expense-summary"),
+  localRecommendations: document.querySelector("#local-recommendations"),
   moodResult: document.querySelector("#mood-result"),
   profileStatus: document.querySelector("#profile-status"),
   profileForm: document.querySelector("#profile-form"),
@@ -123,6 +124,12 @@ function renderDashboard(dashboard) {
   ];
 
   renderCards(els.expenseSummary, expenseCards, (item) => item);
+
+  renderCards(els.localRecommendations, dashboard.recommendations, (item) => ({
+    title: item.title,
+    meta: `${item.category} · ${item.budgetLabel}`,
+    copy: `${item.subtitle}. ${item.reason}`
+  }));
 }
 
 async function loadAiStatus() {

@@ -68,10 +68,20 @@ export interface AiProviderStatus {
   notes: string[];
 }
 
+export interface RecommendationItem {
+  id: string;
+  category: "food" | "relax" | "activity";
+  title: string;
+  subtitle: string;
+  reason: string;
+  budgetLabel: string;
+}
+
 export interface DashboardSnapshot {
   user: UserProfile;
   plannedTasks: PlannedTask[];
   expenseSummary: ExpenseSummary;
   latestMood?: MoodLog;
   dailyFocus: string;
+  recommendations: RecommendationItem[];
 }

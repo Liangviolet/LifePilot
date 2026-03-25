@@ -37,7 +37,7 @@ Analyze user messages with lightweight mood detection and return gentle, non-med
 
 ### 4. Local Lifestyle Recommendations
 
-Future versions will combine location, time, budget, and preferences to recommend what to eat, where to go, and what to do nearby.
+The current MVP now includes a local recommendation module that suggests what to eat, how to relax, and what kind of small activity to do next based on city, budget, time of day, and recent mood.
 
 ## Current Implementation
 
@@ -48,6 +48,7 @@ The repository now includes:
 - A browser UI served directly by Express
 - Editable user profile settings
 - A provider-based AI layer with deterministic fallback
+- A local recommendation module for nearby-life style decisions
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
 ## AI Layer
@@ -87,8 +88,6 @@ LIFEPILOT_AI_MODEL=gpt-4o-mini
 LIFEPILOT_AI_API_KEY=your_api_key
 ```
 
-You can replace the base URL and model with any compatible service.
-
 ### Example: Ollama Provider
 
 ```bash
@@ -127,6 +126,7 @@ GET    /api/tasks/:userId/plan
 POST   /api/expenses
 GET    /api/expenses/:userId/summary
 POST   /api/moods/analyze
+GET    /api/recommendations/:userId
 GET    /api/dashboard/:userId
 ```
 
@@ -140,12 +140,13 @@ You can call:
 
 ```bash
 GET /api/dashboard/demo-user
+GET /api/recommendations/demo-user
 GET /api/ai/status
 ```
 
 ## Next Steps
 
 - Add onboarding and multiple user flows
+- Connect real POI/map data for recommendation enrichment
 - Add more provider adapters and safer structured output validation
-- Expand the recommendation layer for local lifestyle use cases
 - Introduce richer user feedback and personalization loops
