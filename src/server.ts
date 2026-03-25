@@ -48,6 +48,28 @@ app.post("/api/users", (request, response) => {
   response.status(201).json(repository.createUser(user));
 });
 
+app.put("/api/users/:userId", (request, response) => {
+  const existingUser = repository.getUserById(request.params.userId);
+  if (!existingUser) {
+    response.status(404).json({ message: "User not found" });
+    return;
+  }
+
+  const payload = request.body as Partial<UserProfile>;
+  const updatedUser: UserProfile = {
+    ...existingUser,
+    nickname: payload.nickname ?? existingUser.nickname,
+    city: payload.city ?? existingUser.city,
+    monthlyBudget: payload.monthlyBudget ?? existingUser.monthlyBudget,
+    wakeTime: payload.wakeTime ?? existingUser.wakeTime,
+    sleepTime: payload.sleepTime ?? existingUser.sleepTime,
+    preferredFocusWindow: payload.preferredFocusWindow ?? existingUser.preferredFocusWindow,
+    habits: payload.habits ?? existingUser.habits
+  };
+
+  response.json(repository.updateUser(updatedUser));
+});
+
 app.post("/api/tasks", (request, response) => {
   const payload = request.body as Partial<Task>;
 

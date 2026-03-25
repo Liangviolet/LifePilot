@@ -54,6 +54,57 @@
           </div>
         </section>
 
+        <section class="panel panel-profile">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Profile</p>
+              <h2>Personal Settings</h2>
+            </div>
+          </div>
+          <form id="profile-form" class="stack-form">
+            <div class="two-col">
+              <label>
+                <span>Nickname</span>
+                <input name="nickname" type="text" required />
+              </label>
+              <label>
+                <span>City</span>
+                <input name="city" type="text" required />
+              </label>
+            </div>
+            <div class="two-col">
+              <label>
+                <span>Monthly budget</span>
+                <input name="monthlyBudget" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                <span>Focus window</span>
+                <select name="preferredFocusWindow">
+                  <option value="morning">Morning</option>
+                  <option value="afternoon">Afternoon</option>
+                  <option value="evening">Evening</option>
+                </select>
+              </label>
+            </div>
+            <div class="two-col">
+              <label>
+                <span>Wake time</span>
+                <input name="wakeTime" type="time" required />
+              </label>
+              <label>
+                <span>Sleep time</span>
+                <input name="sleepTime" type="time" required />
+              </label>
+            </div>
+            <label>
+              <span>Habits</span>
+              <input name="habits" type="text" placeholder="Morning reset, Evening walk" />
+            </label>
+            <button type="submit" class="primary-button">Save profile</button>
+            <p id="profile-status" class="inline-status"></p>
+          </form>
+        </section>
+
         <section class="panel">
           <div class="panel-head">
             <div>

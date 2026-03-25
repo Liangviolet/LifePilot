@@ -1,7 +1,8 @@
 const userId = "demo-user";
 
 const state = {
-  dashboard: null
+  dashboard: null,
+  user: null
 };
 
 const els = {
@@ -16,6 +17,8 @@ const els = {
   taskPlan: document.querySelector("#task-plan"),
   expenseSummary: document.querySelector("#expense-summary"),
   moodResult: document.querySelector("#mood-result"),
+  profileStatus: document.querySelector("#profile-status"),
+  profileForm: document.querySelector("#profile-form"),
   taskForm: document.querySelector("#task-form"),
   expenseForm: document.querySelector("#expense-form"),
   moodForm: document.querySelector("#mood-form"),
@@ -64,8 +67,20 @@ function renderCards(container, items, mapper) {
   });
 }
 
+function fillProfile(user) {
+  state.user = user;
+  els.profileForm.elements.nickname.value = user.nickname;
+  els.profileForm.elements.city.value = user.city;
+  els.profileForm.elements.monthlyBudget.value = String(user.monthlyBudget);
+  els.profileForm.elements.preferredFocusWindow.value = user.preferredFocusWindow;
+  els.profileForm.elements.wakeTime.value = user.wakeTime;
+  els.profileForm.elements.sleepTime.value = user.sleepTime;
+  els.profileForm.elements.habits.value = user.habits.join(", ");
+}
+
 function renderDashboard(dashboard) {
   state.dashboard = dashboard;
+  fillProfile(dashboard.user);
 
   els.heroUser.textContent = dashboard.user.nickname;
   els.heroFocus.textContent = dashboard.dailyFocus;
@@ -106,6 +121,31 @@ function renderDashboard(dashboard) {
 async function loadDashboard() {
   const dashboard = await api(`/api/dashboard/${userId}`);
   renderDashboard(dashboard);
+}
+
+async function handleProfileSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(els.profileForm);
+  const habits = String(formData.get("habits") || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  await api(`/api/users/${userId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      nickname: formData.get("nickname"),
+      city: formData.get("city"),
+      monthlyBudget: Number(formData.get("monthlyBudget")),
+      preferredFocusWindow: formData.get("preferredFocusWindow"),
+      wakeTime: formData.get("wakeTime"),
+      sleepTime: formData.get("sleepTime"),
+      habits
+    })
+  });
+
+  els.profileStatus.textContent = "Profile saved. Your dashboard has been refreshed.";
+  await loadDashboard();
 }
 
 async function handleTaskSubmit(event) {
@@ -170,6 +210,7 @@ async function handleMoodSubmit(event) {
 }
 
 async function bootstrap() {
+  els.profileForm.addEventListener("submit", handleProfileSubmit);
   els.taskForm.addEventListener("submit", handleTaskSubmit);
   els.expenseForm.addEventListener("submit", handleExpenseSubmit);
   els.moodForm.addEventListener("submit", handleMoodSubmit);
@@ -179,6 +220,7 @@ async function bootstrap() {
     await loadDashboard();
   } catch (error) {
     els.heroFocus.textContent = error.message;
+    els.profileStatus.textContent = error.message;
   }
 }
 

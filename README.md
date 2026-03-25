@@ -46,6 +46,7 @@ The repository now includes:
 - A Node.js + TypeScript API
 - SQLite-based local persistence
 - A browser UI served directly by Express
+- Editable user profile settings
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
 ## Quick Start
@@ -68,6 +69,7 @@ Open the web app in your browser and use the bundled demo user experience.
 ```bash
 GET    /api/users/:userId
 POST   /api/users
+PUT    /api/users/:userId
 POST   /api/tasks
 GET    /api/tasks/:userId/plan
 POST   /api/expenses
@@ -90,7 +92,7 @@ GET /api/dashboard/demo-user
 
 ## Next Steps
 
-- Add a richer frontend flow for onboarding and profile editing
+- Add onboarding and multiple user flows
 - Upgrade the suggestion engine from rules to model-backed generation
 - Expand the recommendation layer for local lifestyle use cases
 - Introduce richer user feedback and personalization loops

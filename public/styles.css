@@ -111,6 +111,10 @@ body {
   grid-column: span 12;
 }
 
+.panel-profile {
+  grid-column: span 8;
+}
+
 .panel-tall {
   grid-row: span 2;
 }
@@ -248,9 +252,16 @@ textarea {
 .list-card-copy,
 .insight-card p,
 .snapshot-card p,
-.hero-card p {
+.hero-card p,
+.inline-status {
   color: var(--muted);
   line-height: 1.6;
+}
+
+.inline-status {
+  min-height: 1.6em;
+  margin: 0;
+  font-size: 0.92rem;
 }
 
 .insight-card {
@@ -271,7 +282,8 @@ textarea {
 
   .panel,
   .panel-wide,
-  .panel-tall {
+  .panel-tall,
+  .panel-profile {
     grid-column: span 12;
   }
 

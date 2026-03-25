@@ -262,6 +262,24 @@ export const repository = {
     return user;
   },
 
+  updateUser(user: UserProfile): UserProfile {
+    db.prepare(`
+      UPDATE users
+      SET nickname = ?, city = ?, monthly_budget = ?, wake_time = ?, sleep_time = ?, preferred_focus_window = ?, habits_json = ?
+      WHERE id = ?
+    `).run(
+      user.nickname,
+      user.city,
+      user.monthlyBudget,
+      user.wakeTime,
+      user.sleepTime,
+      user.preferredFocusWindow,
+      JSON.stringify(user.habits),
+      user.id
+    );
+    return user;
+  },
+
   getTasksByUserId(userId: string): Task[] {
     const rows = db.prepare("SELECT * FROM tasks WHERE user_id = ? ORDER BY rowid ASC").all(userId) as Array<
       Parameters<typeof mapTask>[0]
