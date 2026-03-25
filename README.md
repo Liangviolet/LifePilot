@@ -47,20 +47,57 @@ The repository now includes:
 - SQLite-based local persistence
 - A browser UI served directly by Express
 - Editable user profile settings
-- An AI service layer with provider abstraction and prompt builders
+- A provider-based AI layer with deterministic fallback
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
 ## AI Layer
 
 LifePilot now routes decision logic through a provider-based AI service layer.
 
-Current default:
+Supported provider modes:
 
-- `rules` provider
-- Prompt builders for task planning, spending advice, mood analysis, and daily focus
-- `GET /api/ai/status` to inspect the active provider mode
+- `rules`
+- `openai-compatible`
+- `ollama`
 
-This means the current MVP still runs locally and deterministically, but the codebase is now structured so a future LLM provider can be added without rewriting routes or dashboard logic.
+This means the project is not tied to OpenAI only. You can plug in:
+
+- OpenAI-compatible APIs
+- OpenRouter or similar gateways
+- DeepSeek-compatible endpoints
+- Self-hosted OpenAI-style APIs
+- Local Ollama models
+
+### Environment Variables
+
+```bash
+LIFEPILOT_AI_PROVIDER=rules
+LIFEPILOT_AI_MODEL=
+LIFEPILOT_AI_BASE_URL=
+LIFEPILOT_AI_API_KEY=
+LIFEPILOT_OLLAMA_MODEL=
+```
+
+### Example: OpenAI-Compatible Provider
+
+```bash
+LIFEPILOT_AI_PROVIDER=openai-compatible
+LIFEPILOT_AI_BASE_URL=https://api.openai.com/v1
+LIFEPILOT_AI_MODEL=gpt-4o-mini
+LIFEPILOT_AI_API_KEY=your_api_key
+```
+
+You can replace the base URL and model with any compatible service.
+
+### Example: Ollama Provider
+
+```bash
+LIFEPILOT_AI_PROVIDER=ollama
+LIFEPILOT_AI_BASE_URL=http://localhost:11434
+LIFEPILOT_OLLAMA_MODEL=llama3.1
+```
+
+If an external model call fails, LifePilot falls back to the local rules provider so the app can keep working.
 
 ## Quick Start
 
@@ -109,6 +146,6 @@ GET /api/ai/status
 ## Next Steps
 
 - Add onboarding and multiple user flows
-- Connect a real LLM provider behind the new AI provider interface
+- Add more provider adapters and safer structured output validation
 - Expand the recommendation layer for local lifestyle use cases
 - Introduce richer user feedback and personalization loops

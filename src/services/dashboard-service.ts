@@ -2,7 +2,7 @@ import { DashboardSnapshot } from "../models";
 import { repository } from "../data/db";
 import { generateDailyFocus, generateExpenseSummary, generateTaskPlan } from "./ai/service";
 
-export function buildDashboard(userId: string): DashboardSnapshot | null {
+export async function buildDashboard(userId: string): Promise<DashboardSnapshot | null> {
   const user = repository.getUserById(userId);
   if (!user) {
     return null;
@@ -12,9 +12,9 @@ export function buildDashboard(userId: string): DashboardSnapshot | null {
   const userExpenses = repository.getExpensesByUserId(userId);
   const userMood = repository.getLatestMoodByUserId(userId) ?? undefined;
 
-  const plannedTasks = generateTaskPlan(user, userTasks);
-  const expenseSummary = generateExpenseSummary(user, userExpenses);
-  const dailyFocus = generateDailyFocus(user, plannedTasks, expenseSummary, userMood);
+  const plannedTasks = await generateTaskPlan(user, userTasks);
+  const expenseSummary = await generateExpenseSummary(user, userExpenses);
+  const dailyFocus = await generateDailyFocus(user, plannedTasks, expenseSummary, userMood);
 
   return {
     user,

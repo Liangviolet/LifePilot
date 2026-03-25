@@ -3,8 +3,13 @@ import { AiProviderStatus, Expense, ExpenseSummary, MoodAnalysisResult, MoodLog,
 export interface AiProvider {
   readonly name: string;
   getStatus(): AiProviderStatus;
-  planTasks(user: UserProfile, tasks: Task[]): PlannedTask[];
-  summarizeExpenses(user: UserProfile, expenses: Expense[]): ExpenseSummary;
-  analyzeMood(message: string): MoodAnalysisResult;
-  generateDailyFocus(user: UserProfile, plannedTasks: PlannedTask[], expenseSummary: ExpenseSummary, latestMood?: MoodLog): string;
+  planTasks(user: UserProfile, tasks: Task[]): Promise<PlannedTask[]>;
+  summarizeExpenses(user: UserProfile, expenses: Expense[]): Promise<ExpenseSummary>;
+  analyzeMood(message: string): Promise<MoodAnalysisResult>;
+  generateDailyFocus(
+    user: UserProfile,
+    plannedTasks: PlannedTask[],
+    expenseSummary: ExpenseSummary,
+    latestMood?: MoodLog
+  ): Promise<string>;
 }

@@ -93,7 +93,7 @@ app.post("/api/tasks", (request, response) => {
   response.status(201).json(repository.createTask(task));
 });
 
-app.get("/api/tasks/:userId/plan", (request, response) => {
+app.get("/api/tasks/:userId/plan", async (request, response) => {
   const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
@@ -101,7 +101,7 @@ app.get("/api/tasks/:userId/plan", (request, response) => {
   }
 
   const userTasks = repository.getTasksByUserId(user.id);
-  response.json(generateTaskPlan(user, userTasks));
+  response.json(await generateTaskPlan(user, userTasks));
 });
 
 app.post("/api/expenses", (request, response) => {
@@ -124,7 +124,7 @@ app.post("/api/expenses", (request, response) => {
   response.status(201).json(repository.createExpense(expense));
 });
 
-app.get("/api/expenses/:userId/summary", (request, response) => {
+app.get("/api/expenses/:userId/summary", async (request, response) => {
   const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
@@ -132,10 +132,10 @@ app.get("/api/expenses/:userId/summary", (request, response) => {
   }
 
   const userExpenses = repository.getExpensesByUserId(user.id);
-  response.json(generateExpenseSummary(user, userExpenses));
+  response.json(await generateExpenseSummary(user, userExpenses));
 });
 
-app.post("/api/moods/analyze", (request, response) => {
+app.post("/api/moods/analyze", async (request, response) => {
   const payload = request.body as { userId?: string; message?: string };
 
   if (!payload.userId || !repository.getUserById(payload.userId) || !payload.message) {
@@ -143,12 +143,12 @@ app.post("/api/moods/analyze", (request, response) => {
     return;
   }
 
-  const moodLog = createMoodLog(payload.userId, payload.message);
+  const moodLog = await createMoodLog(payload.userId, payload.message);
   response.status(201).json(repository.createMoodLog(moodLog));
 });
 
-app.get("/api/dashboard/:userId", (request, response) => {
-  const dashboard = buildDashboard(request.params.userId);
+app.get("/api/dashboard/:userId", async (request, response) => {
+  const dashboard = await buildDashboard(request.params.userId);
   if (!dashboard) {
     response.status(404).json({ message: "User not found" });
     return;
