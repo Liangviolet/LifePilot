@@ -47,7 +47,20 @@ The repository now includes:
 - SQLite-based local persistence
 - A browser UI served directly by Express
 - Editable user profile settings
+- An AI service layer with provider abstraction and prompt builders
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
+
+## AI Layer
+
+LifePilot now routes decision logic through a provider-based AI service layer.
+
+Current default:
+
+- `rules` provider
+- Prompt builders for task planning, spending advice, mood analysis, and daily focus
+- `GET /api/ai/status` to inspect the active provider mode
+
+This means the current MVP still runs locally and deterministically, but the codebase is now structured so a future LLM provider can be added without rewriting routes or dashboard logic.
 
 ## Quick Start
 
@@ -67,6 +80,8 @@ Open the web app in your browser and use the bundled demo user experience.
 ## Current API
 
 ```bash
+GET    /health
+GET    /api/ai/status
 GET    /api/users/:userId
 POST   /api/users
 PUT    /api/users/:userId
@@ -88,11 +103,12 @@ You can call:
 
 ```bash
 GET /api/dashboard/demo-user
+GET /api/ai/status
 ```
 
 ## Next Steps
 
 - Add onboarding and multiple user flows
-- Upgrade the suggestion engine from rules to model-backed generation
+- Connect a real LLM provider behind the new AI provider interface
 - Expand the recommendation layer for local lifestyle use cases
 - Introduce richer user feedback and personalization loops

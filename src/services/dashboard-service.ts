@@ -1,7 +1,6 @@
 import { DashboardSnapshot } from "../models";
 import { repository } from "../data/db";
-import { summarizeExpenses } from "./finance-service";
-import { buildTaskPlan } from "./planner-service";
+import { generateDailyFocus, generateExpenseSummary, generateTaskPlan } from "./ai/service";
 
 export function buildDashboard(userId: string): DashboardSnapshot | null {
   const user = repository.getUserById(userId);
@@ -13,12 +12,9 @@ export function buildDashboard(userId: string): DashboardSnapshot | null {
   const userExpenses = repository.getExpensesByUserId(userId);
   const userMood = repository.getLatestMoodByUserId(userId) ?? undefined;
 
-  const plannedTasks = buildTaskPlan(user, userTasks);
-  const expenseSummary = summarizeExpenses(user, userExpenses);
-
-  const dailyFocus = plannedTasks[0]
-    ? `先完成“${plannedTasks[0].title}”，这会显著减轻今天的压力。`
-    : "今天没有待办任务，适合整理一下预算和生活计划。";
+  const plannedTasks = generateTaskPlan(user, userTasks);
+  const expenseSummary = generateExpenseSummary(user, userExpenses);
+  const dailyFocus = generateDailyFocus(user, plannedTasks, expenseSummary, userMood);
 
   return {
     user,

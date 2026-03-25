@@ -54,6 +54,20 @@ export interface ExpenseSummary {
   savingsTips: string[];
 }
 
+export interface MoodAnalysisResult {
+  emotion: EmotionType;
+  score: number;
+  advice: string[];
+}
+
+export interface AiProviderStatus {
+  configuredProvider: string;
+  activeProvider: string;
+  mode: "rules" | "llm-ready";
+  ready: boolean;
+  notes: string[];
+}
+
 export interface DashboardSnapshot {
   user: UserProfile;
   plannedTasks: PlannedTask[];

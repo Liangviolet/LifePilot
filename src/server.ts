@@ -4,9 +4,7 @@ import path from "node:path";
 import { initializeDatabase, repository } from "./data/db";
 import { Expense, Task, UserProfile } from "./models";
 import { buildDashboard } from "./services/dashboard-service";
-import { summarizeExpenses } from "./services/finance-service";
-import { toMoodLog } from "./services/mood-service";
-import { buildTaskPlan } from "./services/planner-service";
+import { createMoodLog, generateExpenseSummary, generateTaskPlan, getAiStatus } from "./services/ai/service";
 import { createId } from "./utils/id";
 
 const app = express();
@@ -20,6 +18,10 @@ app.use(express.static(publicDir));
 
 app.get("/health", (_request, response) => {
   response.json({ ok: true, service: "LifePilot API" });
+});
+
+app.get("/api/ai/status", (_request, response) => {
+  response.json(getAiStatus());
 });
 
 app.get("/api/users/:userId", (request, response) => {
@@ -99,7 +101,7 @@ app.get("/api/tasks/:userId/plan", (request, response) => {
   }
 
   const userTasks = repository.getTasksByUserId(user.id);
-  response.json(buildTaskPlan(user, userTasks));
+  response.json(generateTaskPlan(user, userTasks));
 });
 
 app.post("/api/expenses", (request, response) => {
@@ -130,7 +132,7 @@ app.get("/api/expenses/:userId/summary", (request, response) => {
   }
 
   const userExpenses = repository.getExpensesByUserId(user.id);
-  response.json(summarizeExpenses(user, userExpenses));
+  response.json(generateExpenseSummary(user, userExpenses));
 });
 
 app.post("/api/moods/analyze", (request, response) => {
@@ -141,7 +143,7 @@ app.post("/api/moods/analyze", (request, response) => {
     return;
   }
 
-  const moodLog = toMoodLog(payload.userId, payload.message);
+  const moodLog = createMoodLog(payload.userId, payload.message);
   response.status(201).json(repository.createMoodLog(moodLog));
 });
 

@@ -2,12 +2,14 @@ const userId = "demo-user";
 
 const state = {
   dashboard: null,
-  user: null
+  user: null,
+  aiStatus: null
 };
 
 const els = {
   heroUser: document.querySelector("#hero-user"),
   heroFocus: document.querySelector("#hero-focus"),
+  heroAiStatus: document.querySelector("#hero-ai-status"),
   totalSpent: document.querySelector("#total-spent"),
   budgetUsage: document.querySelector("#budget-usage"),
   topTask: document.querySelector("#top-task"),
@@ -67,6 +69,11 @@ function renderCards(container, items, mapper) {
   });
 }
 
+function renderAiStatus(status) {
+  state.aiStatus = status;
+  els.heroAiStatus.textContent = `AI provider: ${status.activeProvider} (${status.mode})`;
+}
+
 function fillProfile(user) {
   state.user = user;
   els.profileForm.elements.nickname.value = user.nickname;
@@ -116,6 +123,11 @@ function renderDashboard(dashboard) {
   ];
 
   renderCards(els.expenseSummary, expenseCards, (item) => item);
+}
+
+async function loadAiStatus() {
+  const status = await api("/api/ai/status");
+  renderAiStatus(status);
 }
 
 async function loadDashboard() {
@@ -214,10 +226,12 @@ async function bootstrap() {
   els.taskForm.addEventListener("submit", handleTaskSubmit);
   els.expenseForm.addEventListener("submit", handleExpenseSubmit);
   els.moodForm.addEventListener("submit", handleMoodSubmit);
-  els.refreshButton.addEventListener("click", loadDashboard);
+  els.refreshButton.addEventListener("click", async () => {
+    await Promise.all([loadDashboard(), loadAiStatus()]);
+  });
 
   try {
-    await loadDashboard();
+    await Promise.all([loadDashboard(), loadAiStatus()]);
   } catch (error) {
     els.heroFocus.textContent = error.message;
     els.profileStatus.textContent = error.message;

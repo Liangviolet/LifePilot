@@ -95,6 +95,11 @@ body {
   margin: 8px 0;
 }
 
+.hero-footnote {
+  margin-top: 8px;
+  font-size: 0.88rem;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);

@@ -1,10 +1,4 @@
-import { EmotionType, MoodLog } from "../models";
-
-interface MoodAnalysisResult {
-  emotion: EmotionType;
-  score: number;
-  advice: string[];
-}
+import { EmotionType, MoodAnalysisResult, MoodLog } from "../models";
 
 const stressedKeywords = ["累", "压力", "烦", "赶", "焦虑", "崩"];
 const sadKeywords = ["难过", "低落", "委屈", "失眠", "没动力"];
@@ -60,8 +54,7 @@ export function analyzeMood(message: string): MoodAnalysisResult {
   };
 }
 
-export function toMoodLog(userId: string, message: string): MoodLog {
-  const result = analyzeMood(message);
+export function toMoodLog(userId: string, message: string, result: MoodAnalysisResult): MoodLog {
   return {
     id: `mood-${Date.now()}`,
     userId,
