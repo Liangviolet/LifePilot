@@ -21,6 +21,7 @@ const els = {
   taskPlan: document.querySelector("#task-plan"),
   expenseSummary: document.querySelector("#expense-summary"),
   localRecommendations: document.querySelector("#local-recommendations"),
+  providerHints: document.querySelector("#provider-hints"),
   moodResult: document.querySelector("#mood-result"),
   profileStatus: document.querySelector("#profile-status"),
   profileForm: document.querySelector("#profile-form"),
@@ -72,14 +73,48 @@ function renderCards(container, items, mapper) {
   });
 }
 
+function renderProviderHints() {
+  els.providerHints.innerHTML = "";
+
+  const hints = [
+    {
+      title: `AI: ${state.aiStatus?.activeProvider ?? "unknown"}`,
+      message: state.aiStatus?.ready
+        ? `Configured and ready. ${state.aiStatus.notes?.[0] ?? ""}`
+        : "Currently using fallback behavior or missing model configuration.",
+      code: state.aiStatus?.activeProvider === "rules"
+        ? "LIFEPILOT_AI_PROVIDER=openai-compatible"
+        : "LIFEPILOT_AI_MODEL=your_model"
+    },
+    {
+      title: `POI: ${state.poiStatus?.activeProvider ?? "unknown"}`,
+      message: state.poiStatus?.ready
+        ? `Configured and ready. ${state.poiStatus.notes?.[0] ?? ""}`
+        : "Currently using local recommendation fallback. Configure a real POI provider for live places.",
+      code: state.poiStatus?.activeProvider === "rules"
+        ? "LIFEPILOT_POI_PROVIDER=amap"
+        : "LIFEPILOT_AMAP_API_KEY=your_key"
+    }
+  ];
+
+  hints.forEach((hint) => {
+    const node = document.createElement("article");
+    node.className = "provider-tip";
+    node.innerHTML = `<strong>${hint.title}</strong><p>${hint.message}</p><code>${hint.code}</code>`;
+    els.providerHints.appendChild(node);
+  });
+}
+
 function renderAiStatus(status) {
   state.aiStatus = status;
   els.heroAiStatus.textContent = `AI provider: ${status.activeProvider} (${status.mode})`;
+  renderProviderHints();
 }
 
 function renderPoiStatus(status) {
   state.poiStatus = status;
   els.heroPoiStatus.textContent = `POI provider: ${status.activeProvider}${status.ready ? "" : " (fallback)"}`;
+  renderProviderHints();
 }
 
 function fillProfile(user) {
