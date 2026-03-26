@@ -54,6 +54,34 @@ The repository now includes:
 - A local recommendation module with POI provider fallback
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
+## Quick Start
+
+1. Install dependencies
+
+```bash
+npm install
+```
+
+2. Create your local environment file
+
+```bash
+copy .env.example .env
+```
+
+3. Start the app
+
+```bash
+npm run dev
+```
+
+Default address:
+
+```bash
+http://localhost:3000
+```
+
+Open the web app in your browser and use the bundled demo user experience.
+
 ## AI Layer
 
 LifePilot routes decision logic through a provider-based AI service layer.
@@ -64,7 +92,7 @@ Supported provider modes:
 - `openai-compatible`
 - `ollama`
 
-### Environment Variables
+### Example AI Environment Variables
 
 ```bash
 LIFEPILOT_AI_PROVIDER=rules
@@ -83,7 +111,7 @@ Supported provider modes:
 - `rules`
 - `amap`
 
-### Environment Variables
+### Example POI Environment Variables
 
 ```bash
 LIFEPILOT_POI_PROVIDER=rules
@@ -100,21 +128,6 @@ LIFEPILOT_AMAP_BASE_URL=https://restapi.amap.com
 ```
 
 If the Amap provider is not configured or the request fails, LifePilot falls back to built-in local recommendation rules.
-
-## Quick Start
-
-```bash
-npm install
-npm run dev
-```
-
-Default address:
-
-```bash
-http://localhost:3000
-```
-
-Open the web app in your browser and use the bundled demo user experience.
 
 ## Current API
 
@@ -138,15 +151,6 @@ Bundled demo user:
 
 ```bash
 demo-user
-```
-
-You can call:
-
-```bash
-GET /api/dashboard/demo-user
-GET /api/recommendations/demo-user
-GET /api/ai/status
-GET /api/poi/status
 ```
 
 ## Next Steps
