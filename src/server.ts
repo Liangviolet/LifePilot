@@ -5,7 +5,7 @@ import { initializeDatabase, repository } from "./data/db";
 import { Expense, Task, UserProfile } from "./models";
 import { buildDashboard } from "./services/dashboard-service";
 import { createMoodLog, generateExpenseSummary, generateTaskPlan, getAiStatus } from "./services/ai/service";
-import { buildLocalRecommendations } from "./services/recommendation-service";
+import { getPoiStatus, getRecommendations } from "./services/poi/service";
 import { createId } from "./utils/id";
 
 const app = express();
@@ -23,6 +23,10 @@ app.get("/health", (_request, response) => {
 
 app.get("/api/ai/status", (_request, response) => {
   response.json(getAiStatus());
+});
+
+app.get("/api/poi/status", (_request, response) => {
+  response.json(getPoiStatus());
 });
 
 app.get("/api/users/:userId", (request, response) => {
@@ -148,7 +152,7 @@ app.post("/api/moods/analyze", async (request, response) => {
   response.status(201).json(repository.createMoodLog(moodLog));
 });
 
-app.get("/api/recommendations/:userId", (request, response) => {
+app.get("/api/recommendations/:userId", async (request, response) => {
   const user = repository.getUserById(request.params.userId);
   if (!user) {
     response.status(404).json({ message: "User not found" });
@@ -156,7 +160,7 @@ app.get("/api/recommendations/:userId", (request, response) => {
   }
 
   const latestMood = repository.getLatestMoodByUserId(user.id) ?? undefined;
-  response.json(buildLocalRecommendations(user, latestMood));
+  response.json(await getRecommendations(user, latestMood));
 });
 
 app.get("/api/dashboard/:userId", async (request, response) => {

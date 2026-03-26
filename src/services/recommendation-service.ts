@@ -42,7 +42,8 @@ function buildFoodRecommendation(
       reason: mood === "stressed"
         ? "A simple, predictable breakfast helps you start with lower decision fatigue."
         : "Starting with a steady breakfast makes your morning plan easier to hold.",
-      budgetLabel
+      budgetLabel,
+      source: "rules"
     };
   }
 
@@ -53,7 +54,8 @@ function buildFoodRecommendation(
       title: `${user.city} budget-friendly meal`,
       subtitle: "Look for a quick noodle, rice bowl, or neighborhood set meal",
       reason: "This keeps spending under control while still giving you a solid energy reset.",
-      budgetLabel
+      budgetLabel,
+      source: "rules"
     };
   }
 
@@ -64,7 +66,8 @@ function buildFoodRecommendation(
       title: `${user.city} comfort dinner pick`,
       subtitle: "Choose one place you already trust instead of scrolling endlessly",
       reason: "A reliable favorite saves time and protects your mental bandwidth.",
-      budgetLabel
+      budgetLabel,
+      source: "rules"
     };
   }
 
@@ -74,7 +77,8 @@ function buildFoodRecommendation(
     title: `${user.city} balanced meal idea`,
     subtitle: "Pick a sit-down spot with vegetables + protein instead of pure convenience food",
     reason: "It balances mood, cost, and energy better than an impulse order.",
-    budgetLabel
+    budgetLabel,
+    source: "rules"
   };
 }
 
@@ -92,7 +96,8 @@ function buildRelaxRecommendation(
       title: `${user.city} low-pressure break`,
       subtitle: timeBucket === "evening" ? "Take a short neighborhood walk without headphones" : "Step out for a 10-minute quiet reset",
       reason: "Your recent mood suggests recovery matters more than stimulation right now.",
-      budgetLabel: "mostly free"
+      budgetLabel: "mostly free",
+      source: "rules"
     };
   }
 
@@ -103,7 +108,8 @@ function buildRelaxRecommendation(
       title: `${user.city} gentle mood lift`,
       subtitle: "Choose a bright cafe corner, bookstore, or riverside route for a short change of scene",
       reason: "A small environment shift often helps more than staying in the same emotional space.",
-      budgetLabel: "low"
+      budgetLabel: "low",
+      source: "rules"
     };
   }
 
@@ -113,7 +119,8 @@ function buildRelaxRecommendation(
     title: `${user.city} reset window`,
     subtitle: timeBucket === "evening" ? "Do one easy ritual before bed" : "Add a short break between your focus blocks",
     reason: "A lighter reset now will help the rest of your day feel less crowded.",
-    budgetLabel: "free"
+    budgetLabel: "free",
+    source: "rules"
   };
 }
 
@@ -132,7 +139,8 @@ function buildActivityRecommendation(
       title: `${user.city} momentum activity`,
       subtitle: timeBucket === "evening" ? "Use the good energy for a short social or outdoor plan" : "Schedule one meaningful task outside your usual loop",
       reason: "Your recent mood suggests this is a good window to convert energy into momentum.",
-      budgetLabel: "optional spend"
+      budgetLabel: "optional spend",
+      source: "rules"
     };
   }
 
@@ -142,11 +150,12 @@ function buildActivityRecommendation(
     title: `${user.city} steady routine move`,
     subtitle: `Anchor today with ${habitHint}`,
     reason: "A familiar routine is often the easiest way to keep the day from drifting.",
-    budgetLabel: "free"
+    budgetLabel: "free",
+    source: "rules"
   };
 }
 
-export function buildLocalRecommendations(user: UserProfile, latestMood?: MoodLog): RecommendationItem[] {
+export function buildRuleRecommendations(user: UserProfile, latestMood?: MoodLog): RecommendationItem[] {
   const now = new Date();
   const timeBucket = getTimeBucket(now);
   const budgetLabel = getBudgetLabel(user.monthlyBudget);
@@ -156,4 +165,8 @@ export function buildLocalRecommendations(user: UserProfile, latestMood?: MoodLo
     buildRelaxRecommendation(user, timeBucket, latestMood),
     buildActivityRecommendation(user, timeBucket, latestMood)
   ];
+}
+
+export function buildLocalRecommendations(user: UserProfile, latestMood?: MoodLog): RecommendationItem[] {
+  return buildRuleRecommendations(user, latestMood);
 }

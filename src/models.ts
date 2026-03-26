@@ -75,6 +75,9 @@ export interface RecommendationItem {
   subtitle: string;
   reason: string;
   budgetLabel: string;
+  source: "rules" | "amap-poi";
+  address?: string;
+  mapQuery?: string;
 }
 
 export interface DashboardSnapshot {

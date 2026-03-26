@@ -37,7 +37,10 @@ Analyze user messages with lightweight mood detection and return gentle, non-med
 
 ### 4. Local Lifestyle Recommendations
 
-The current MVP now includes a local recommendation module that suggests what to eat, how to relax, and what kind of small activity to do next based on city, budget, time of day, and recent mood.
+The current MVP now includes a local recommendation module that can either:
+
+- Use built-in rule-based suggestions
+- Fetch real POI suggestions through Amap Web Service when configured
 
 ## Current Implementation
 
@@ -48,26 +51,18 @@ The repository now includes:
 - A browser UI served directly by Express
 - Editable user profile settings
 - A provider-based AI layer with deterministic fallback
-- A local recommendation module for nearby-life style decisions
+- A local recommendation module with POI provider fallback
 - Task planning, expense tracking, mood check-ins, and dashboard aggregation
 
 ## AI Layer
 
-LifePilot now routes decision logic through a provider-based AI service layer.
+LifePilot routes decision logic through a provider-based AI service layer.
 
 Supported provider modes:
 
 - `rules`
 - `openai-compatible`
 - `ollama`
-
-This means the project is not tied to OpenAI only. You can plug in:
-
-- OpenAI-compatible APIs
-- OpenRouter or similar gateways
-- DeepSeek-compatible endpoints
-- Self-hosted OpenAI-style APIs
-- Local Ollama models
 
 ### Environment Variables
 
@@ -79,24 +74,32 @@ LIFEPILOT_AI_API_KEY=
 LIFEPILOT_OLLAMA_MODEL=
 ```
 
-### Example: OpenAI-Compatible Provider
+## POI Layer
+
+LifePilot also routes local recommendations through a POI provider layer.
+
+Supported provider modes:
+
+- `rules`
+- `amap`
+
+### Environment Variables
 
 ```bash
-LIFEPILOT_AI_PROVIDER=openai-compatible
-LIFEPILOT_AI_BASE_URL=https://api.openai.com/v1
-LIFEPILOT_AI_MODEL=gpt-4o-mini
-LIFEPILOT_AI_API_KEY=your_api_key
+LIFEPILOT_POI_PROVIDER=rules
+LIFEPILOT_AMAP_API_KEY=
+LIFEPILOT_AMAP_BASE_URL=https://restapi.amap.com
 ```
 
-### Example: Ollama Provider
+### Example: Amap POI Provider
 
 ```bash
-LIFEPILOT_AI_PROVIDER=ollama
-LIFEPILOT_AI_BASE_URL=http://localhost:11434
-LIFEPILOT_OLLAMA_MODEL=llama3.1
+LIFEPILOT_POI_PROVIDER=amap
+LIFEPILOT_AMAP_API_KEY=your_amap_web_service_key
+LIFEPILOT_AMAP_BASE_URL=https://restapi.amap.com
 ```
 
-If an external model call fails, LifePilot falls back to the local rules provider so the app can keep working.
+If the Amap provider is not configured or the request fails, LifePilot falls back to built-in local recommendation rules.
 
 ## Quick Start
 
@@ -118,6 +121,7 @@ Open the web app in your browser and use the bundled demo user experience.
 ```bash
 GET    /health
 GET    /api/ai/status
+GET    /api/poi/status
 GET    /api/users/:userId
 POST   /api/users
 PUT    /api/users/:userId
@@ -142,11 +146,12 @@ You can call:
 GET /api/dashboard/demo-user
 GET /api/recommendations/demo-user
 GET /api/ai/status
+GET /api/poi/status
 ```
 
 ## Next Steps
 
 - Add onboarding and multiple user flows
-- Connect real POI/map data for recommendation enrichment
+- Connect real POI/map data with richer filtering and coordinates
 - Add more provider adapters and safer structured output validation
 - Introduce richer user feedback and personalization loops

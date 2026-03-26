@@ -3,13 +3,15 @@ const userId = "demo-user";
 const state = {
   dashboard: null,
   user: null,
-  aiStatus: null
+  aiStatus: null,
+  poiStatus: null
 };
 
 const els = {
   heroUser: document.querySelector("#hero-user"),
   heroFocus: document.querySelector("#hero-focus"),
   heroAiStatus: document.querySelector("#hero-ai-status"),
+  heroPoiStatus: document.querySelector("#hero-poi-status"),
   totalSpent: document.querySelector("#total-spent"),
   budgetUsage: document.querySelector("#budget-usage"),
   topTask: document.querySelector("#top-task"),
@@ -75,6 +77,11 @@ function renderAiStatus(status) {
   els.heroAiStatus.textContent = `AI provider: ${status.activeProvider} (${status.mode})`;
 }
 
+function renderPoiStatus(status) {
+  state.poiStatus = status;
+  els.heroPoiStatus.textContent = `POI provider: ${status.activeProvider}${status.ready ? "" : " (fallback)"}`;
+}
+
 function fillProfile(user) {
   state.user = user;
   els.profileForm.elements.nickname.value = user.nickname;
@@ -127,14 +134,19 @@ function renderDashboard(dashboard) {
 
   renderCards(els.localRecommendations, dashboard.recommendations, (item) => ({
     title: item.title,
-    meta: `${item.category} · ${item.budgetLabel}`,
-    copy: `${item.subtitle}. ${item.reason}`
+    meta: `${item.category} · ${item.source} · ${item.budgetLabel}`,
+    copy: `${item.subtitle}${item.address ? ` · ${item.address}` : ""}. ${item.reason}`
   }));
 }
 
 async function loadAiStatus() {
   const status = await api("/api/ai/status");
   renderAiStatus(status);
+}
+
+async function loadPoiStatus() {
+  const status = await api("/api/poi/status");
+  renderPoiStatus(status);
 }
 
 async function loadDashboard() {
@@ -234,11 +246,11 @@ async function bootstrap() {
   els.expenseForm.addEventListener("submit", handleExpenseSubmit);
   els.moodForm.addEventListener("submit", handleMoodSubmit);
   els.refreshButton.addEventListener("click", async () => {
-    await Promise.all([loadDashboard(), loadAiStatus()]);
+    await Promise.all([loadDashboard(), loadAiStatus(), loadPoiStatus()]);
   });
 
   try {
-    await Promise.all([loadDashboard(), loadAiStatus()]);
+    await Promise.all([loadDashboard(), loadAiStatus(), loadPoiStatus()]);
   } catch (error) {
     els.heroFocus.textContent = error.message;
     els.profileStatus.textContent = error.message;
