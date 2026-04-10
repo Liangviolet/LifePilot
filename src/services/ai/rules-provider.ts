@@ -43,7 +43,7 @@ export class RulesAiProvider implements AiProvider {
     return {
       configuredProvider,
       activeProvider: this.name,
-      mode: "llm-ready",
+      mode: "rules",
       ready: true,
       notes: [
         "Using deterministic rule-based generation.",

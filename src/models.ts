@@ -75,7 +75,7 @@ export interface RecommendationItem {
   subtitle: string;
   reason: string;
   budgetLabel: string;
-  source: "rules" | "amap-poi";
+  source: "rules" | "amap-poi" | "amap-fallback";
   address?: string;
   mapQuery?: string;
 }

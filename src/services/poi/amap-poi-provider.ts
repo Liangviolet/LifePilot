@@ -125,7 +125,15 @@ export class AmapPoiProvider implements PoiProvider {
     return plans.map((plan, index) => {
       const poi = results[index][0];
       if (!poi) {
-        throw new Error(`No POI found for ${plan.category}`);
+        return {
+          id: `fallback-${plan.category}`,
+          category: plan.category,
+          title: `${user.city} ${plan.category} suggestion`,
+          subtitle: "No specific place found, try searching for local options",
+          reason: "Real POI search returned no results, falling back to general suggestion",
+          budgetLabel: plan.budgetLabel,
+          source: "amap-fallback"
+        } satisfies RecommendationItem;
       }
 
       return {
@@ -139,6 +147,6 @@ export class AmapPoiProvider implements PoiProvider {
         address: poi.address || undefined,
         mapQuery: `${user.city} ${poi.name}`
       } satisfies RecommendationItem;
-    });
+    }).filter(Boolean) as RecommendationItem[];
   }
 }

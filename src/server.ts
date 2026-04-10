@@ -110,6 +110,33 @@ app.get("/api/tasks/:userId/plan", async (request, response) => {
   response.json(await generateTaskPlan(user, userTasks));
 });
 
+app.put("/api/tasks/:taskId", (request, response) => {
+  const payload = request.body as Partial<Task>;
+  const updatedTask = repository.updateTask(request.params.taskId, {
+    status: payload.status,
+    title: payload.title,
+    priority: payload.priority,
+    dueDate: payload.dueDate,
+    estimatedMinutes: payload.estimatedMinutes
+  });
+
+  if (!updatedTask) {
+    response.status(404).json({ message: "Task not found" });
+    return;
+  }
+
+  response.json(updatedTask);
+});
+
+app.delete("/api/tasks/:taskId", (request, response) => {
+  const deleted = repository.deleteTask(request.params.taskId);
+  if (!deleted) {
+    response.status(404).json({ message: "Task not found" });
+    return;
+  }
+  response.status(204).send();
+});
+
 app.post("/api/expenses", (request, response) => {
   const payload = request.body as Partial<Expense>;
 
@@ -139,6 +166,15 @@ app.get("/api/expenses/:userId/summary", async (request, response) => {
 
   const userExpenses = repository.getExpensesByUserId(user.id);
   response.json(await generateExpenseSummary(user, userExpenses));
+});
+
+app.delete("/api/expenses/:expenseId", (request, response) => {
+  const deleted = repository.deleteExpense(request.params.expenseId);
+  if (!deleted) {
+    response.status(404).json({ message: "Expense not found" });
+    return;
+  }
+  response.status(204).send();
 });
 
 app.post("/api/moods/analyze", async (request, response) => {

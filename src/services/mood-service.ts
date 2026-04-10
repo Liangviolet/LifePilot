@@ -1,8 +1,8 @@
 import { EmotionType, MoodAnalysisResult, MoodLog } from "../models";
 
-const stressedKeywords = ["累", "压力", "烦", "赶", "焦虑", "崩"];
-const sadKeywords = ["难过", "低落", "委屈", "失眠", "没动力"];
-const positiveKeywords = ["开心", "轻松", "满足", "顺利", "有成就"];
+const stressedKeywords = ["累", "压力", "烦", "赶", "焦虑", "崩", "stressed", "tired", "exhausted", "overwhelmed", "pressure", "anxiety"];
+const sadKeywords = ["难过", "低落", "委屈", "失眠", "没动力", "sad", "depressed", "down", "unhappy", "hopeless", "insomnia"];
+const positiveKeywords = ["开心", "轻松", "满足", "顺利", "有成就", "happy", "relaxed", "satisfied", "great", "accomplished", "positive", "good"];
 
 function includesAny(message: string, keywords: string[]): boolean {
   return keywords.some((keyword) => message.includes(keyword));

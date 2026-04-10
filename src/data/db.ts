@@ -295,6 +295,30 @@ export const repository = {
     return task;
   },
 
+  updateTask(taskId: string, updates: Partial<Pick<Task, "title" | "priority" | "dueDate" | "estimatedMinutes" | "status">>): Task | null {
+    const existing = db.prepare("SELECT * FROM tasks WHERE id = ?").get(taskId) as Parameters<typeof mapTask>[0] | undefined;
+    if (!existing) {
+      return null;
+    }
+
+    const updated = {
+      ...existing,
+      title: updates.title ?? existing.title,
+      priority: updates.priority ?? existing.priority,
+      due_date: updates.dueDate ?? existing.due_date,
+      estimated_minutes: updates.estimatedMinutes ?? existing.estimated_minutes,
+      status: updates.status ?? existing.status
+    };
+
+    db.prepare(`
+      UPDATE tasks
+      SET title = ?, priority = ?, due_date = ?, estimated_minutes = ?, status = ?
+      WHERE id = ?
+    `).run(updated.title, updated.priority, updated.due_date, updated.estimated_minutes, updated.status, taskId);
+
+    return mapTask(updated);
+  },
+
   getExpensesByUserId(userId: string): Expense[] {
     const rows = db
       .prepare("SELECT * FROM expenses WHERE user_id = ? ORDER BY datetime(created_at) DESC")
@@ -323,5 +347,15 @@ export const repository = {
       .prepare("SELECT * FROM moods WHERE user_id = ? ORDER BY datetime(created_at) DESC LIMIT 1")
       .get(userId) as Parameters<typeof mapMood>[0] | undefined;
     return row ? mapMood(row) : null;
+  },
+
+  deleteTask(taskId: string): boolean {
+    const result = db.prepare("DELETE FROM tasks WHERE id = ?").run(taskId);
+    return result.changes > 0;
+  },
+
+  deleteExpense(expenseId: string): boolean {
+    const result = db.prepare("DELETE FROM expenses WHERE id = ?").run(expenseId);
+    return result.changes > 0;
   }
 };
